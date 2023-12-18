@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "image-fast-dedup"
+version = "0.1.0"
+description = ""
+authors = ["kaka"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10, <3.12"
+opencv-python = "^4.8.1.78"
+pyarrow = "^14.0.1"
+fastdup = "^1.73"
+imagededup = "^0.3.2"
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -24,8 +24,6 @@ class Arguments:
     column: str
     dest_dir: str
     model: str
-    # max_pixels: float
-    # min_pixels: float
 
 
 args = Arguments()
