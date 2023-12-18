@@ -4,7 +4,7 @@ import pandas as pd
 import pyarrow as pa
 
 def getFilePathArr(num):
-  prefix = "../../train_images/frame_"
+  prefix = "/home/ubuntu/dedup/train_images/frame_"
   paths = []
   for i in range(1, num + 1):
     formatted_num = '{:05d}'.format(i)
@@ -21,7 +21,7 @@ def write_input_file():
 
   table = pa.Table.from_pandas(df)
 
-  file_path = './output.parquet'  # 替换为你想要保存的 Parquet 文件路径
+  file_path = '/home/ubuntu/dedup/parquet_files/test_input.parquet'  # 替换为你想要保存的 Parquet 文件路径
 
   pq.write_table(table, file_path)
   print('finished')

@@ -10,7 +10,6 @@ import pandas as pd
 import pyarrow.parquet as pq
 from PIL import Image
 from tqdm.auto import tqdm
-from unibox.utils.uni_resizer import UniResizer
 
 # from upscale.scunet_model import UpscalerScuNET
 from dedup.imagedup import *
@@ -21,9 +20,12 @@ lock = threading.Lock()
 
 class Arguments:
     input: str
+    hash_file: str
     column: str
     dest_dir: str
     model: str
+    # max_pixels: float
+    # min_pixels: float
 
 
 args = Arguments()
@@ -44,8 +46,11 @@ def dedup_images(df: pd.DataFrame, model: str):
   )
   
   if model == "imagedup":
-    duplicate_list = dedup_using_imagedup(df)
-    write_result(df['file_path'], duplicate_list, dest_file)
+    # duplicate_list = dedup_using_imagedup(df)
+    # write_result(df['file_path'], duplicate_list, dest_file)
+    print(" ------- start imagedup -------")
+    image_paths, duplicate_list = dedup_with_hashfile_using_imagedup(args.hash_file)
+    write_result(image_paths, duplicate_list, dest_file)
   else :
     table = pq.read_table(args.input)
     df = table.to_pandas()
@@ -63,6 +68,11 @@ def dedup_images(df: pd.DataFrame, model: str):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dedup images.")
     parser.add_argument("--input", type=str, help="Input parquet file path")
+    parser.add_argument(
+        "--hash-file",
+        type=str,
+        help="generated hash file, for example /opt/ml/input/data/airflow/resized/xxxx/",
+    )
     parser.add_argument(
         "--column", type=str, default="image", help="Column name of the image path"
     )
