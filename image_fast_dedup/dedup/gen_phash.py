@@ -7,6 +7,15 @@ import sys
 import numpy as np
 import multiprocessing as mp
 import pandas as pd
+import time
+
+class Arguments:
+    input: str
+    n_thread: int
+    dest_dir: str
+    hash_func: str
+
+args = Arguments()
 
 counter = mp.Value('i', 0)
 
@@ -19,7 +28,7 @@ def map(samples):
         a.append([c_hash, sample])
         with counter.get_lock():
             counter.value += 1
-            if counter.value % 10 == 0:
+            if counter.value % 100 == 0:
                 print(counter.value)
     return a
   
@@ -36,16 +45,26 @@ if __name__ == "__main__":
       required=True,
       help="destination directory, for example /opt/ml/input/data/airflow/resized/xxxx/",
   )
+  
+  parser.add_argument(
+      "--hash-func",
+      type=str,
+      default="imagehash",
+      help="calculate hash func",
+  )
 
   parser.parse_args(namespace=args)
   assert args.input.endswith(".parquet"), "Input file must be a parquet file."
   
+  start_time = time.perf_counter()
+  
   data = pd.read_parquet(args.input)
-  image_paths = data['file-path']
+  image_paths = data['file_path']
   
-  args.n_thread = 1 if args.n_thread < 1 else args.n_thread
+  print(args.n_thread)
+  args.n_thread = 1 if int(args.n_thread) < 1 else int(args.n_thread)
   
-  if FLAGS.n_thread == 1:
+  if args.n_thread == 1:
     split_names = [image_paths]
     # p／rint("split_names".split_names)
   else:
@@ -69,16 +88,19 @@ if __name__ == "__main__":
   processS.join()
 
   s = ['pHash imageName']
+  
+  res_list = []
 
   for i, values in enumerate(c_results):
       values = values.get()
       for value in values:
-          s.append('\n{} {}'.format(value[0], value[1]))
+        #   s.append('\n{} {}'.format(value[0], value[1]))
+        res_list.append([value[1], value[0]])
 
   dest_path = os.path.join(
         args.dest_dir,
-        f"phash_{model}.txt",
+        f"phash_{args.hash_func}.csv",
   )
-  f = open(args.dest_path, 'w')
-  f.writelines(s)
-  f.close()
+  res_df = pd.DataFrame(res_list)
+  res_df.to_csv(dest_path, index=False, sep=",", header=False)
+  print('gen hash finished. time : ', time.perf_counter() - start_time)
