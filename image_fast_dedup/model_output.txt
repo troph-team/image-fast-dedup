@@ -1,0 +1,2 @@
+model: imagedup -finished. consumed time: 29.821595351968426
+model: fastdup -finished. consumed time: 19.201069636968896
