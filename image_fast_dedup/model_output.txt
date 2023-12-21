@@ -1,3 +1,8 @@
-model: imagedup -finished. consumed time: 29.821595351968426
-model: fastdup -finished. consumed time: 19.201069636968896
-model: imagedup -finished. consumed time: 0.3644219560083002
+model: fastdup -finished. consumed time: 183.35145112300052
+gen hash: 187.29918291327817
+duplicate:
+  model: imagedup hashblock -finished. consumed time: 23.252816966000864
+  model: imagedup bktree -finished. consumed time: 2380.1323141579996
+  model: imagedup bf-cython -finished. consumed time: 97.62150664399996
+  model: imagedup bf-no-cython -finished. consumed time: 2657.9814610460016
+

@@ -68,6 +68,4 @@ def dedup_using_fastdup(input: str, dest_dir):
   # Mark files as duplicates
   marked_df = mark_files_as_duplicates(component_ids, connected_components_df, keep=True)
   new_df = marked_df[['filename', 'is_dup']]
-  print(marked_df)
-  print(new_df)
   return new_df

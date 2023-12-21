@@ -42,14 +42,14 @@ def dedup_images(df: pd.DataFrame, model: str):
   
   dest_file = os.path.join(
         args.dest_dir,
-        f"dedup_{model}.csv",
+        f"dedup_{model}_{args.search_method}.csv",
   )
   
   if model == "imagedup":
     # duplicate_list = dedup_using_imagedup(df)
     # write_result(df['file_path'], duplicate_list, dest_file)
     print(" ------- start imagedup -------")
-    image_paths, duplicate_list = dedup_with_hashfile_using_imagedup(args.hash_file)
+    image_paths, duplicate_list = dedup_with_hashfile_using_imagedup(args.hash_file, args.search_method)
     write_result(image_paths, duplicate_list, dest_file)
   else :
     table = pq.read_table(args.input)
@@ -87,6 +87,12 @@ if __name__ == "__main__":
         type=str,
         required=True,
         help="dedup model",
+    )
+    parser.add_argument(
+        "--search_method",
+        type=str,
+        default="hashblock",
+        help="imagededup search method",
     )
     parser.parse_args(namespace=args)
 
