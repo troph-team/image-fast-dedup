@@ -16,7 +16,7 @@ def dedup_with_hashfile_using_imagedup(hash_file: str, search_method='hashblock'
   df = pd.read_csv(hash_file, header=None, names=['file_path', 'hash_value'])
   for index, path in enumerate(df['file_path'].tolist()):
     encodings[path] = df['hash_value'][index]
-  duplicates = phasher.find_duplicates_to_remove(encoding_map=encodings, search_method=search_method, no_cython=True)
+  duplicates = phasher.find_duplicates_to_remove(encoding_map=encodings, search_method=search_method)
   return df['file_path'], duplicates
 
 def write_result(image_paths, duplicate_list, dest_file):
